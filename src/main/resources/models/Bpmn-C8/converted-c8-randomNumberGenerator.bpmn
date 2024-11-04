@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:conversion="http://camunda.org/schema/conversion/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" conversion:converterVersion="0.9.1-SNAPSHOT" exporter="Camunda Modeler" exporterVersion="5.23.0" expressionLanguage="http://www.w3.org/1999/XPath" id="Definitions_1hi96bv" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0" targetNamespace="http://bpmn.io/schema/bpmn" typeLanguage="http://www.w3.org/2001/XMLSchema">
+  <bpmn:process id="RandomGenerator" isClosed="false" isExecutable="true" name="Random Generator" processType="None">
+    <bpmn:extensionElements>
+      <conversion:message severity="INFO">Unused attribute 'historyTimeToLive' on 'process' is removed.</conversion:message>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1" isInterrupting="true" name="Demo initiated" parallelMultiple="false">
+      <bpmn:outgoing>Flow_09lxoa7</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_09lxoa7" sourceRef="StartEvent_1" targetRef="Activity_1diioqe"/>
+    <bpmn:serviceTask completionQuantity="1" id="Activity_1diioqe" implementation="##WebService" isForCompensation="false" name="Generate Random Number" startQuantity="1">
+      <bpmn:extensionElements>
+        <conversion:message severity="REVIEW">Attribute 'delegateExpression' on 'serviceTask' was mapped. Delegate call to '${randomDelegate}' was transformed to job type 'camunda-7-adapter'. Please review your implementation.</conversion:message>
+        <zeebe:taskHeaders>
+          <zeebe:header key="delegateExpression" value="${randomDelegate}"/>
+        </zeebe:taskHeaders>
+        <zeebe:taskDefinition type="camunda-7-adapter"/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_09lxoa7</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pt0bs0</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:sequenceFlow id="Flow_1pt0bs0" sourceRef="Activity_1diioqe" targetRef="Activity_19yx9vl"/>
+    <bpmn:userTask completionQuantity="1" id="Activity_19yx9vl" implementation="##unspecified" isForCompensation="false" name="Review Outcome in Tasklist" startQuantity="1">
+      <bpmn:extensionElements>
+        <zeebe:userTask/>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1pt0bs0</bpmn:incoming>
+      <bpmn:outgoing>Flow_04c5fne</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_0qvh52x" name="Demo finished">
+      <bpmn:incoming>Flow_04c5fne</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_04c5fne" sourceRef="Activity_19yx9vl" targetRef="Event_0qvh52x"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane bpmnElement="RandomGenerator" id="BPMNPlane_1">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_1" id="_BPMNShape_StartEvent_2">
+        <dc:Bounds height="36" width="36" x="179" y="99"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="71" x="162" y="142"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_1diioqe" id="Activity_1iyyn6w_di">
+        <dc:Bounds height="80" width="100" x="270" y="77"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Activity_19yx9vl" id="Activity_13suu0a_di">
+        <dc:Bounds height="80" width="100" x="430" y="77"/>
+        <bpmndi:BPMNLabel/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Event_0qvh52x" id="Event_0qvh52x_di">
+        <dc:Bounds height="36" width="36" x="592" y="99"/>
+        <bpmndi:BPMNLabel>
+          <dc:Bounds height="14" width="71" x="575" y="142"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_09lxoa7" id="Flow_09lxoa7_di">
+        <di:waypoint x="215" y="117"/>
+        <di:waypoint x="270" y="117"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1pt0bs0" id="Flow_1pt0bs0_di">
+        <di:waypoint x="370" y="117"/>
+        <di:waypoint x="430" y="117"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_04c5fne" id="Flow_04c5fne_di">
+        <di:waypoint x="530" y="117"/>
+        <di:waypoint x="592" y="117"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

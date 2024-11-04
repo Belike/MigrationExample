@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>io.camunda</groupId>
+    <artifactId>MigrationExample</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>MigrationExample</name>
+    <description>MigrationExample</description>
+
+    <properties>
+        <java.version>21</java.version>
+        <encoding>UTF-8</encoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <version.camunda>7.22.0</version.camunda>
+        <version.adapter>0.10.1</version.adapter>
+        <version.spring-zeebe>8.5.13</version.spring-zeebe>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <profiles>
+        <!-- C7 Profile -->
+        <profile>
+            <id>c7</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>c7</value>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- Camunda Dependencies -->
+                <!-- Bill of Material C7 Engine-->
+                <dependency>
+                    <groupId>org.camunda.bpm</groupId>
+                    <artifactId>camunda-bom</artifactId>
+                    <version>${version.camunda}</version>
+                    <scope>import</scope>
+                    <type>pom</type>
+                </dependency>
+
+                <!-- Bill of Material C7 DMN  -->
+                <dependency>
+                    <groupId>org.camunda.bpm.dmn</groupId>
+                    <artifactId>camunda-engine-dmn-bom</artifactId>
+                    <version>${version.camunda}</version>
+                    <type>pom</type>
+                    <scope>import</scope>
+                </dependency>
+                <!-- C7 Engine, adjust -ee for Enterprise Edition -->
+                <dependency>
+                    <groupId>org.camunda.bpm.springboot</groupId>
+                    <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+                    <version>${version.camunda}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.camunda.bpm.springboot</groupId>
+                    <artifactId>camunda-bpm-spring-boot-starter-rest</artifactId>
+                    <version>${version.camunda}</version>
+                </dependency>
+
+                <!-- H2 Database for C7 -->
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                </dependency>
+
+                <!-- Spring JDBC for C7 Transaction Manager -->
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-jdbc</artifactId>
+                </dependency>
+
+                <!-- Camunda 8 Dependencies for startup -->
+                <dependency>
+                    <groupId>io.camunda.spring</groupId>
+                    <artifactId>spring-boot-starter-camunda</artifactId>
+                    <version>${version.spring-zeebe}</version>
+                    <scope>provided</scope>
+                </dependency>
+                <!-- Adapter -->
+                <dependency>
+                    <groupId>org.camunda.community.migration</groupId>
+                    <artifactId>camunda-7-adapter</artifactId>
+                    <version>${version.adapter}</version>
+                    <scope>provided</scope>
+                </dependency>
+            </dependencies>
+            <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <includes>
+                            <include>application.properties</include>
+                            <include>application-c7.properties</include>
+                            <include>META-INF/**</include>
+                            <include>models/Bpmn-C7/**</include>
+                        </includes>
+                    </resource>
+                </resources>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>io.camunda.migrationexample.MigrationExampleC7Application</mainClass>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- C8 Profile -->
+        <profile>
+            <id>c8</id>
+            <activation>
+                <property>
+                    <name>spring.profiles.active</name>
+                    <value>c8</value>
+                </property>
+            </activation>
+            <dependencies>
+                <!-- Bill of Material C7 Engine-->
+                <dependency>
+                    <groupId>org.camunda.bpm</groupId>
+                    <artifactId>camunda-bom</artifactId>
+                    <version>${version.camunda}</version>
+                    <scope>import</scope>
+                    <type>pom</type>
+                </dependency>
+                <!-- Bill of Material C7 DMN  -->
+                <dependency>
+                    <groupId>org.camunda.bpm.dmn</groupId>
+                    <artifactId>camunda-engine-dmn-bom</artifactId>
+                    <version>${version.camunda}</version>
+                    <type>pom</type>
+                </dependency>
+
+                <!-- Adapter -->
+                <dependency>
+                    <groupId>org.camunda.community.migration</groupId>
+                    <artifactId>camunda-7-adapter</artifactId>
+                    <version>${version.adapter}</version>
+                </dependency>
+                <dependency>
+                    <groupId>io.camunda.spring</groupId>
+                    <artifactId>spring-boot-starter-camunda</artifactId>
+                    <version>${version.spring-zeebe}</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>org.camunda.bpm.springboot</groupId>
+                    <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+                    <version>${version.camunda}</version>
+                </dependency>
+
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <mainClass>io.camunda.migrationexample.MigrationExampleC8Application</mainClass>
+                            <excludes>
+                                <exclude>
+                                    <groupId>org.camunda.bpm.springboot</groupId>
+                                    <artifactId>camunda-bpm-spring-boot-starter-webapp</artifactId>
+                                </exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+    </profiles>
+</project>
